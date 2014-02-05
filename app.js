@@ -24,7 +24,9 @@ io.sockets.on('connection', function(socket) {
 	console.log('Socket connected')
 	socket.on('ipquery', function(address) {
 		console.log("Ping query", address);
-		var ping = command('ping -c1 -t2 '+address, {timeout: 5000, env: {'PATH':__dirname}}, function(error, stdout, stderr) {
+		var e = 'ping -c1 -t2 '+address;
+		console.log('Executing',e)
+		var ping = command(e, {timeout: 5000, env: {'PATH':__dirname}}, function(error, stdout, stderr) {
 			console.log("Ping finished",address);
 			socket.emit('ipresp', error, stdout, stderr);
 		});
