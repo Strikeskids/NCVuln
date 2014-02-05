@@ -30,7 +30,7 @@ io.sockets.on('connection', function(socket) {
 	});
 });
 
-var port = Number(process.env.port || 6978);
+var port = Number(process.env.PORT || 6978);
 
 server.listen(port, function() {
 	console.log("Listening on " + port);
