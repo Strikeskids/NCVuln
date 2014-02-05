@@ -10,7 +10,7 @@ var server = http.createServer(app);
 
 var io = require('socket.io').listen(server);
 
-process.env.PATH += ':/sbin:/etc/alternatives';
+process.env.PATH += ':/etc/alternatives';
 
 console.log(process.env);
 
