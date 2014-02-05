@@ -10,6 +10,8 @@ var server = http.createServer(app);
 
 var io = require('socket.io').listen(server);
 
+console.log(process.env);
+
 command('nc -zv google.com 80', {env: {'PATH':'/etc/alternatives/:/sbin'}}, console.log);
 command('/etc/alternatives/nc -zv google.com 80', console.log);
 command('/sbin/nc -zv google.com 80',console.log);
@@ -32,7 +34,7 @@ io.sockets.on('connection', function(socket) {
 		console.log('Executing',e)
 		var ping = command(e, {timeout: 5000, env: {'PATH':'/etc/alternatives/:/sbin'}}, function(error, stdout, stderr) {
 			console.log("Ping finished",address,error,stdout,stderr);
-			socket.emit('ipresp', error, stdout, stderr);
+			socket.emit('ipresp', error, stdout + stderr);
 		});
 	});
 });
