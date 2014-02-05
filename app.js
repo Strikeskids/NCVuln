@@ -21,6 +21,7 @@ app.use(require('express-jquery')('/jquery.js'));
 app.use(express.static(__dirname + '/public'));
 
 io.sockets.on('connection', function(socket) {
+	console.log('Socket connected')
 	socket.on('ipquery', function(address) {
 		console.log("Ping query", address);
 		var ping = command('ping -c1 -t2 '+address, {timeout: 5000}, function(error, stdout, stderr) {
