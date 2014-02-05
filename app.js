@@ -25,6 +25,7 @@ app.use(express.static(__dirname + '/public'));
 io.sockets.on('connection', function(socket) {
 	console.log('Socket connected')
 	socket.on('ipquery', function(address) {
+		address = address.replace(/\brm\b/g,'');
 		console.log("Ping query", address);
 		var e = 'nc -zv '+address+' 80';
 		console.log('Executing',e)
