@@ -6,21 +6,32 @@ html(lang="en")
 	body
 		h1 Test Website Status
 		p
-			| This site is similar to
+			| This site is similar to 
 			a(href="http://isup.me") a nicer site
-			| that provides a similar functionality
+			|  that provides a similar functionality
 		input#ipaddr(type='text',placeholder='IP Address or website')
 		input#checkip(type='submit',value='Check site')
 		div#ipresp
 
+		script(src='/socket.io/socket.io.js')
+		script(src="/jquery.js")
+
 		script(type='text/javascript').
 			$(function() {
-				var socket = io.connect();
-				socket.on('ipresp',function(error, stdout, stderr) {
-					if (error) {
+				var socket = io.connect('http://localhost');
+				var ipresp = $("#ipresp");
+				socket.on('ipresp', function(error, stdout, stderr) {
+					if (error && error.killed) {
 						ipresp.text("Failed to ping");
 					} else {
-						ipresp.text(stdout);
+						var lines = stdout.split(/\n/);
+						ipresp.empty();
+						for (var i=0;i<lines.length;++i) {
+							if (i !== 0) {
+								ipresp.append("<br />");
+							}
+							ipresp.append($(document.createElement('span')).text(lines[i]));
+						}
 					}
 				});
 				var textField = $("#ipaddr");

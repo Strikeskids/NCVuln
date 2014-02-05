@@ -1,30 +1,36 @@
 var express = require('express');
+var logfmt = require('logfmt');
 var http = require('http');
+var engines = require('consolidate');
 
 var command = require('child_process').exec;
 
 var app = express();
 var server = http.createServer(app);
-// var io = require('socket.io').listen(server);
+
+var io = require('socket.io').listen(server);
+
+app.engine('jade', engines.jade);
+app.use(logfmt.requestLogger());
 
 app.get('/', function(req, res) {
-	console.log("Index file");
-	res.render('index.html');
+	res.render('index.jade');
 });
 
-// app.use(require('express-jquery')('/jquery.js'));
-// app.use(express.static(__dirname + '/public'));
+app.use(require('express-jquery')('/jquery.js'));
+app.use(express.static(__dirname + '/public'));
 
-// io.sockets.on('connection', function(socket) {
-// 	socket.on('ipquery', function(address) {
+io.sockets.on('connection', function(socket) {
+	socket.on('ipquery', function(address) {
+		console.log("Ping query", address);
+		var ping = command('ping -c1 -t2 '+address, {timeout: 5000}, function(error, stdout, stderr) {
+			console.log("Ping finished",address);
+			socket.emit('ipresp', error, stdout, stderr);
+		});
+	});
+});
 
-// 		var ping = command('ping -c 3 '+address, {timeout: 5000}, function(error, stdout, stderr) {
-// 			socket.emit('ipresp', error, stdout, stderr);
-// 		});
-// 	});
-// });
-
-var port = Number(process.env.port || 6666);
+var port = Number(process.env.port || 6978);
 
 server.listen(port, function() {
 	console.log("Listening on " + port);
