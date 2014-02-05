@@ -12,7 +12,7 @@ var io = require('socket.io').listen(server);
 
 console.log("Testing scripts");
 
-command('/bin/ls /usr/bin /usr/local/bin /usr/sbin /bin /sbin', console.log);
+command('/bin/ls -l /usr/bin /usr/local/bin /usr/sbin /bin /sbin', console.log);
 
 app.engine('jade', engines.jade);
 app.use(logfmt.requestLogger());
