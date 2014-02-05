@@ -10,10 +10,6 @@ var server = http.createServer(app);
 
 var io = require('socket.io').listen(server);
 
-console.log("Testing scripts");
-
-command('/bin/ls -l /usr/bin /usr/local/bin /usr/sbin /bin /sbin', console.log);
-
 app.engine('jade', engines.jade);
 app.use(logfmt.requestLogger());
 
@@ -28,9 +24,9 @@ io.sockets.on('connection', function(socket) {
 	console.log('Socket connected')
 	socket.on('ipquery', function(address) {
 		console.log("Ping query", address);
-		var e = './ping -c1 -t2 '+address;
+		var e = 'nc -zv '+address+' 80';
 		console.log('Executing',e)
-		var ping = command(e, {timeout: 5000, env: {'PATH':__dirname}}, function(error, stdout, stderr) {
+		var ping = command(e, {timeout: 5000, env: {'PATH':'/sbin'}}, function(error, stdout, stderr) {
 			console.log("Ping finished",address,error,stdout,stderr);
 			socket.emit('ipresp', error, stdout, stderr);
 		});
