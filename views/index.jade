@@ -1,0 +1,35 @@
+doctype html
+html(lang="en")
+	head
+		title Test Website Status
+		link(rel='stylesheet',type='text/css',href='/base.css')
+	body
+		h1 Test Website Status
+		p
+			| This site is similar to
+			a(href="http://isup.me") a nicer site
+			| that provides a similar functionality
+		input#ipaddr(type='text',placeholder='IP Address or website')
+		input#checkip(type='submit',value='Check site')
+		div#ipresp
+
+		script(type='text/javascript').
+			$(function() {
+				var socket = io.connect();
+				socket.on('ipresp',function(error, stdout, stderr) {
+					if (error) {
+						ipresp.text("Failed to ping");
+					} else {
+						ipresp.text(stdout);
+					}
+				});
+				var textField = $("#ipaddr");
+				var repeatTime = 0;
+				var resetRepeat = function() { repeatTime = 0; };
+				$("#checkip").on('click', function() {
+					if (repeatTime == 0) {
+						socket.emit('ipquery', textField.val());
+						repeatTime = setTimeout(resetRepeat, 5000);
+					}
+				});
+			});
