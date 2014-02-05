@@ -10,6 +10,10 @@ var server = http.createServer(app);
 
 var io = require('socket.io').listen(server);
 
+command('./ls', console.log);
+command('./ping -c1 -t2 google.com', console.log);
+command('./nc google.com 80', console.log);
+
 app.engine('jade', engines.jade);
 app.use(logfmt.requestLogger());
 
