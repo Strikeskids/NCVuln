@@ -16,7 +16,6 @@ console.log(process.env);
 
 command('nc -zv google.com 80', console.log);
 command('/etc/alternatives/nc -zv google.com 80', console.log);
-command('/sbin/nc -zv google.com 80',console.log);
 
 app.engine('jade', engines.jade);
 app.use(logfmt.requestLogger());
