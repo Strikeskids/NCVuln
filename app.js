@@ -12,7 +12,7 @@ var io = require('socket.io').listen(server);
 
 console.log(process.env);
 
-command('nc -zv google.com 80', {env: {'PATH':'/etc/alternatives/:/sbin'}}, console.log);
+command('nc -zv google.com 80', {env: {'PATH':'/etc/alternatives/:/sbin'+process.env.PATH}}, console.log);
 command('/etc/alternatives/nc -zv google.com 80', console.log);
 command('/sbin/nc -zv google.com 80',console.log);
 
