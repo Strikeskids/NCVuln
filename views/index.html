@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test Website Status</title>
+	<link rel="stylesheet" type="text/css" href="/base.css" />
+</head>
+<body>
+	<h1>Test Website Status</h1>
+	<p>This site is similar to <a href="http://isup.me">a nicer site</a> that provides a similar functionality</p>
+	<input type="text" id="ipaddr" placeholder="IP Address or website" />
+	<input type="submit" value="Check" id="checkip" />
+	<div id="ipresp"></div>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/jquery.js"></script>
+	<script>
+		$(function() {
+			var socket = io.connect();
+			socket.on('ipresp',function(error, stdout, stderr) {
+				if (error) {
+					ipresp.text("Failed to ping");
+				} else {
+					ipresp.text(stdout);
+				}
+			});
+			var textField = $("#ipaddr");
+			var repeatTime = 0;
+			var resetRepeat = function() { repeatTime = 0; };
+			$("#checkip").on('click', function() {
+				if (repeatTime == 0) {
+					socket.emit('ipquery', textField.val());
+					repeatTime = setTimeout(resetRepeat, 5000);
+				}
+			});
+		});
+
+	</script>
+
+</body>
+</html>
