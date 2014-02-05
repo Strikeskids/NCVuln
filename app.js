@@ -12,11 +12,6 @@ var io = require('socket.io').listen(server);
 
 process.env.PATH += ':/etc/alternatives';
 
-console.log(process.env);
-
-command('nc -zv google.com 80', console.log);
-command('/etc/alternatives/nc -zv google.com 80', console.log);
-
 app.engine('jade', engines.jade);
 app.use(logfmt.requestLogger());
 
@@ -33,9 +28,9 @@ io.sockets.on('connection', function(socket) {
 		console.log("Ping query", address);
 		var e = 'nc -zv '+address+' 80';
 		console.log('Executing',e)
-		var ping = command(e, {timeout: 5000, env: {'PATH':'/etc/alternatives/:/sbin'}}, function(error, stdout, stderr) {
+		var ping = command(e, {timeout: 5000, env: process.env}, function(error, stdout, stderr) {
 			console.log("Ping finished",address,error,stdout,stderr);
-			socket.emit('ipresp', error, stdout + stderr);
+			socket.emit('ipresp', error, stdout + stderr, '');
 		});
 	});
 });
